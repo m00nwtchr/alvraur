@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Install tools
-        run: pacman -Syu --needed --noconfirm base-devel namcap openssh git
+        run: pacman -Syu --needed --noconfirm openssh git
 
       - uses: actions/checkout@v4
 
@@ -29,6 +29,9 @@ jobs:
       - name: Check if anything changed
         run: cd aur/ && ! git diff-index --quiet HEAD
       #   run: cd aur`/ && git diff-index --quiet HEAD
+
+      - name: Install dev tools
+        run: pacman -Syu --needed --noconfirm base-devel namcap
 
       - name: Setup
         run: |
