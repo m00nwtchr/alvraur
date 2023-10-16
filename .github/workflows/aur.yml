@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Install tools
-        run: pacman -Syu base-devel namcap
+        run: pacman -Syu --noconfirm base-devel namcap
 
       - uses: actions/checkout@v4
 
@@ -36,5 +36,8 @@ jobs:
           setfacl -d --set u::rwx,g::rwx,o::- aur/
           echo "nobody ALL = NOPASSWD: /usr/bin/pacman" > /etc/sudoers.d/nobody-pacman
 
-      - name: Validate package
+      - name: Build package
         run: cd aur/ && sudo -u nobody makepkg --printsrcinfo > .SRCINFO && sudo -u nobody makepkg -s
+
+      - name: Validate package
+        run: cd aur/ && namcap PKGBUILD && namcap *.pkg*
