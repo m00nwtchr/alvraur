@@ -12,11 +12,11 @@ jobs:
           token: ${{ secrets.PAT }}
 
       - name: Edit PKGBUILD
-        run: sed "s/pkgver=.*/pkgver=${{ github.event.client_payload.alvr_version }}/g" -i PKGBUILD
+        run: sed -e "s/pkgrel=.*/pkgrel=1/g" -e "s/pkgver=.*/pkgver=${{ github.event.client_payload.alvr_version }}/g" -i PKGBUILD
 
       - name: Commit ALVR Version
         run: |
           git config --global user.name 'ALVR Bot'
           git config --global user.email 'your-username@users.noreply.github.com'
-          git commit --author "ALVR Bot <>" -am "Update ALVR version to v${{ github.event.client_payload.alvr_version }}"
+          git commit -am "Update ALVR version to v${{ github.event.client_payload.alvr_version }}"
           git push
