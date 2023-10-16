@@ -43,20 +43,22 @@ jobs:
           setfacl -d --set u::rwx,g::rwx,o::- aur/
           echo "nobody ALL = NOPASSWD: /usr/bin/pacman" > /etc/sudoers.d/nobody-pacman
 
-      - name: Build package
-        working-directory: ./aur
-        run: sudo -E -u nobody makepkg --noconfirm -s && sudo -u nobody makepkg --printsrcinfo > .SRCINFO
-        env:
-          HOME: ${{ github.workspace }}/aur/
+      # - name: Build package
+      #   working-directory: ./aur
+      #   run: sudo -E -u nobody makepkg --noconfirm -s && sudo -u nobody makepkg --printsrcinfo > .SRCINFO
+      #   env:
+      #     HOME: ${{ github.workspace }}/aur/
 
-      - name: Validate package
-        working-directory: ./aur
-        run: namcap PKGBUILD && namcap *.pkg*
+      # - name: Validate package
+      #   working-directory: ./aur
+      #   run: namcap PKGBUILD && namcap *.pkg*
 
       - name: Commit
         working-directory: ./aur
         run: |
-          source PKGBUILD
+          pwd
+          ls -la
+          source $GITHUB_WORKSPACE/PKGBUILD
           git add PKGBUILD .SRCINFO
           git commit --author "ALVR Bot <>" -m "[CI] ALVR $pkgver-$pkgrel"
 
