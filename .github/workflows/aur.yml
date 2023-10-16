@@ -39,9 +39,9 @@ jobs:
           echo "nobody ALL = NOPASSWD: /usr/bin/pacman" > /etc/sudoers.d/nobody-pacman
 
       - name: Build package
-        run: cd aur/ && sudo -u nobody makepkg --printsrcinfo > .SRCINFO && sudo -u nobody makepkg --noconfirm -s
+        run: cd aur/ && sudo -u nobody makepkg --printsrcinfo > .SRCINFO && sudo -E -u nobody makepkg --noconfirm -s
         env:
-          CARGO_HOME: $GITHUB_WORKSPACE/aur/cargo/
+          HOME: $GITHUB_WORKSPACE/aur/
 
       - name: Validate package
         run: cd aur/ && namcap PKGBUILD && namcap *.pkg*
