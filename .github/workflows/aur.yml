@@ -18,5 +18,8 @@ jobs:
       
       - name: Checkout AUR repo
         run: |
-          ssh-add - <<<"${AUR_SSH_KEY}"
+          ssh-add - <<<"${AUR_SSH_KEY} "
           git clone ssh://aur@aur.archlinux.org/alvr.git aur/
+        shell: bash
+        env:
+          AUR_SSH_KEY: ${{secrets.AUR_SSH_KEY}}
