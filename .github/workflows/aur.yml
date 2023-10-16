@@ -56,10 +56,9 @@ jobs:
       - name: Commit
         working-directory: ./aur
         run: |
-          pwd
-          ls -la
           source $GITHUB_WORKSPACE/PKGBUILD
-          git add PKGBUILD .SRCINFO
-          git commit --author "ALVR Bot <>" -m "[CI] ALVR $pkgver-$pkgrel"
+          git config --global user.email "you@example.com"
+          git config --global user.name "ALVR Bot"
+          git commit --author "ALVR Bot <>" -am "[CI] ALVR $pkgver-$pkgrel"
 
 #          git push
