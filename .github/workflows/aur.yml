@@ -15,17 +15,14 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
-
-      - name: Checkout tools repo
-        uses: actions/checkout@v4
-        with:
-          repository: ssh://aur@aur.archlinux.org/alvr.git
-          ssh-key: ${{ secrets.AUR_SSH_KEY }}
-          path: aur
-
-      #- uses: webfactory/ssh-agent@v0.7.0
-      #  with:
-      #    ssh-private-key: ${{ secrets.AUR_SSH_KEY }}
       
-      #- name: Checkout AUR repo
-      #  run: git clone ssh://aur@aur.archlinux.org/alvr.git aur/
+      - uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.AUR_SSH_KEY }}
+      
+      - name: Checkout AUR repo
+        run: git clone ssh://aur@aur.archlinux.org/alvr.git aur/
+
+      - name: Edit PKGBUILD
+        if: "${{ github.event.client_payload.alvr_version != '' }}"
+        
