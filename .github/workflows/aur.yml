@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Install tools
-        run: pacman -Syu --noconfirm base-devel namcap openssh
+        run: pacman -Syu --noconfirm base-devel namcap openssh git
 
       - uses: actions/checkout@v4
 
