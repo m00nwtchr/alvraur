@@ -22,6 +22,9 @@ jobs:
       - name: Add AUR to known_hosts
         run: mkdir -p ~/.ssh && echo "aur.archlinux.org ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEuBKrPzbawxA/k2g6NcyV5jmqwJ2s+zpgZGZ7tpLIcN" > ~/.ssh/known_hosts
 
+      - name: Test
+        run: ssh -Tv aur@aur.archlinux.org
+
       - name: Checkout AUR repo
         run: git clone ssh://aur@aur.archlinux.org/alvr.git aur/
         # run: git clone https://aur.archlinux.org/alvr.git aur/
