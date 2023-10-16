@@ -41,7 +41,7 @@ jobs:
       - name: Build package
         run: cd aur/ && sudo -u nobody makepkg --printsrcinfo > .SRCINFO && sudo -E -u nobody makepkg --noconfirm -s
         env:
-          HOME: $GITHUB_WORKSPACE/aur/
+          HOME: ${{ github.workspace }}/aur/
 
       - name: Validate package
         run: cd aur/ && namcap PKGBUILD && namcap *.pkg*
