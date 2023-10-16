@@ -1,0 +1,22 @@
+name: ALVR Release
+on:
+  repository_dispatch:
+
+jobs:
+  build:
+    if: "${{ github.event.client_payload.alvr_version != '' }}"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+
+      - name: Edit PKGBUILD
+        run: sed "s/pkgver=.*/pkgver=${{ github.event.client_payload.alvr_version }}/g" PKGBUILD
+
+      - name: Commit ALVR Version
+        run: |
+          git config --global user.name 'ALVR Bot'
+          git config --global user.email 'your-username@users.noreply.github.com'
+          git commit -am "Update ALVR version to v${{ github.event.client_payload.alvr_version }}"
+          git push

@@ -1,28 +1,40 @@
 name: AUR
 on:
-  repository_dispatch:
   push:
-    branches: [ "master" ]
+    branches: ["master"]
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    container:
+      image: archlinux
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Install tools
+        run: pacman -Syu base-devel namcap
+
       - uses: actions/checkout@v4
-      
+
       - uses: webfactory/ssh-agent@v0.7.0
         with:
           ssh-private-key: ${{ secrets.AUR_SSH_KEY }}
-      
+
       - name: Checkout AUR repo
         run: git clone ssh://aur@aur.archlinux.org/alvr.git aur/
 
-      - name: Edit PKGBUILD
-        if: "${{ github.event.client_payload.alvr_version != '' }}"
-        
+      - name: Replace PKGBUILD
+        run: cat PKGBUILD > aur/PKGBUILD
+
+      - name: Check if anything changed
+        run: cd aur/ && git diff-index --quiet HEAD
+
+      - name: Setup
+        run: |
+          chgrp nobody aur/
+          chmod g+ws aur/
+          setfacl -m u::rwx,g::rwx aur/
+          setfacl -d --set u::rwx,g::rwx,o::- aur/
+          echo "nobody ALL = NOPASSWD: /usr/bin/pacman" > /etc/sudoers.d/nobody-pacman
+
+      - name: Validate package
+        run: cd aur/ && sudo -u nobody makepkg --printsrcinfo > .SRCINFO && sudo -u nobody makepkg -s
