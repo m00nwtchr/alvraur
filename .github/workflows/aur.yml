@@ -27,7 +27,7 @@ jobs:
         run: cat PKGBUILD > aur/PKGBUILD
 
       - name: Check if anything changed
-        run: cd aur/ && git diff-index --quiet HEAD
+        run: cd aur/ && ! git diff-index --quiet HEAD
 
       - name: Setup
         run: |
